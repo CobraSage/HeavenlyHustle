@@ -4,8 +4,9 @@ using System.Collections.Generic;
 public class BuildingsManager : MonoBehaviour
 {
     public static BuildingsManager Instance { get; private set; }
+    public GameObject spawnTile;
 
-    private List<BuildingsInformation> buildingsList = new List<BuildingsInformation>();
+    public List<BuildingsInformation> buildingsList = new List<BuildingsInformation>();
 
     private void Awake()
     {
@@ -24,17 +25,19 @@ public class BuildingsManager : MonoBehaviour
         BuildingsInformation building = buildingsList.Find(b => b.buildingIndex == buildingIndex);
         if (building != null && !building.isUnlocked)
         {
-            building.isUnlocked = true;
             building.buildingObject.SetActive(true);
+            building.OnUnlock();
             // Saving&Loading
         }
         else if (building == null)
         {
             UtilityScript.LogError("Building " + building.name + " is null!");
+            return;
         }
         else if(building.isUnlocked)
         {
             UtilityScript.LogError("Building " + building.name + " is already unlocked!");
+            return; 
         }
     }
 
@@ -44,6 +47,7 @@ public class BuildingsManager : MonoBehaviour
         if (building.buildingLevel >= 5)
         {
             UtilityScript.LogError("Building " + building.name + " is at max level?!");
+            return;
         }
         if (building != null && building.isUnlocked)
         {
@@ -53,10 +57,12 @@ public class BuildingsManager : MonoBehaviour
         else if (building == null)
         {
             UtilityScript.LogError("Building " + building.name + " is null!");
+            return;
         }
         else if (!building.isUnlocked)
         {
             UtilityScript.LogError("Building " + building.name + " is locked so you cannot upgrade it my friend!");
+            return;
         }
     }
 
@@ -66,6 +72,7 @@ public class BuildingsManager : MonoBehaviour
         if (building.totalCapacityLevel >= 5)
         {
             UtilityScript.LogError("Building " + building.name + "'s capacity is at max level?!");
+            return;
         }
         if (building != null && building.isUnlocked)
         {
@@ -76,10 +83,12 @@ public class BuildingsManager : MonoBehaviour
         else if (building == null)
         {
             UtilityScript.LogError("Building " + building.name + " is null!");
+            return;
         }
         else if (!building.isUnlocked)
         {
             UtilityScript.LogError("Building " + building.name + " is locked so you cannot upgrade it my friend!");
+            return;
         }
     }
 
@@ -89,6 +98,7 @@ public class BuildingsManager : MonoBehaviour
         if (building.timeForEntertainmentLevel >= 5)
         {
             UtilityScript.LogError("Building " + building.name + "'s Time For Entertainment is at max level?!");
+            return;
         }
         if (building != null && building.isUnlocked)
         {
@@ -99,15 +109,12 @@ public class BuildingsManager : MonoBehaviour
         else if (building == null)
         {
             UtilityScript.LogError("Building " + building.name + " is null!");
+            return;
         }
         else if (!building.isUnlocked)
         {
             UtilityScript.LogError("Building " + building.name + " is locked so you cannot upgrade it my friend!");
+            return;
         }
-    }
-
-    public List<BuildingsInformation> GetAllBuildings()
-    {
-        return buildingsList;
     }
 }

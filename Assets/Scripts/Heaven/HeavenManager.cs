@@ -31,6 +31,7 @@ public class HeavenManager : MonoBehaviour
         if (heavenTotalCapacityLevel >= 5)
         {
             UtilityScript.LogError("heavenTotalCapacityLevel is at max level?!");
+            return;
         }
         heavenTotalCapacityLevel++;
         heavenTotalCapacity += 10;
@@ -42,6 +43,7 @@ public class HeavenManager : MonoBehaviour
         if (soulsMultiplierLevel >= 5)
         {
             UtilityScript.LogError("soulsMultiplierLevel is at max level?!");
+            return;
         }
         soulsMultiplierLevel++;
         soulsMultiplier += 0.5f;
@@ -53,6 +55,7 @@ public class HeavenManager : MonoBehaviour
         if (happinessPointsMultiplierLevel >= 5)
         {
             UtilityScript.LogError("happinessPointsMultiplierLevel is at max level?!");
+            return;
         }
         happinessPointsMultiplierLevel++;
         happinessPointsMultiplier += 0.5f;
