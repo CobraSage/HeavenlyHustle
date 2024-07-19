@@ -1,0 +1,113 @@
+using UnityEngine;
+using System.Collections.Generic;
+
+public class BuildingsManager : MonoBehaviour
+{
+    public static BuildingsManager Instance { get; private set; }
+
+    private List<BuildingsInformation> buildingsList = new List<BuildingsInformation>();
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public void UnlockBuilding(int buildingIndex)
+    {
+        BuildingsInformation building = buildingsList.Find(b => b.buildingIndex == buildingIndex);
+        if (building != null && !building.isUnlocked)
+        {
+            building.isUnlocked = true;
+            building.buildingObject.SetActive(true);
+            // Saving&Loading
+        }
+        else if (building == null)
+        {
+            UtilityScript.LogError("Building " + building.name + " is null!");
+        }
+        else if(building.isUnlocked)
+        {
+            UtilityScript.LogError("Building " + building.name + " is already unlocked!");
+        }
+    }
+
+    public void UpgradeBuildingLevel(int buildingIndex)
+    {
+        BuildingsInformation building = buildingsList.Find(b => b.buildingIndex == buildingIndex);
+        if (building.buildingLevel >= 5)
+        {
+            UtilityScript.LogError("Building " + building.name + " is at max level?!");
+        }
+        if (building != null && building.isUnlocked)
+        {
+            building.buildingLevel++;
+            // Saving&Loading
+        }
+        else if (building == null)
+        {
+            UtilityScript.LogError("Building " + building.name + " is null!");
+        }
+        else if (!building.isUnlocked)
+        {
+            UtilityScript.LogError("Building " + building.name + " is locked so you cannot upgrade it my friend!");
+        }
+    }
+
+    public void UpgradeTotalCapacityLevel(int buildingIndex)
+    {
+        BuildingsInformation building = buildingsList.Find(b => b.buildingIndex == buildingIndex);
+        if (building.totalCapacityLevel >= 5)
+        {
+            UtilityScript.LogError("Building " + building.name + "'s capacity is at max level?!");
+        }
+        if (building != null && building.isUnlocked)
+        {
+            building.totalCapacityLevel++;
+            building.totalCapacity += 5;
+            // Saving&Loading
+        }
+        else if (building == null)
+        {
+            UtilityScript.LogError("Building " + building.name + " is null!");
+        }
+        else if (!building.isUnlocked)
+        {
+            UtilityScript.LogError("Building " + building.name + " is locked so you cannot upgrade it my friend!");
+        }
+    }
+
+    public void UpgradeTimeForEntertainment(int buildingIndex)
+    {
+        BuildingsInformation building = buildingsList.Find(b => b.buildingIndex == buildingIndex);
+        if (building.timeForEntertainmentLevel >= 5)
+        {
+            UtilityScript.LogError("Building " + building.name + "'s Time For Entertainment is at max level?!");
+        }
+        if (building != null && building.isUnlocked)
+        {
+            building.timeForEntertainmentLevel++;
+            building.timeForEntertainment -= 0.5f;
+            // Saving&Loading
+        }
+        else if (building == null)
+        {
+            UtilityScript.LogError("Building " + building.name + " is null!");
+        }
+        else if (!building.isUnlocked)
+        {
+            UtilityScript.LogError("Building " + building.name + " is locked so you cannot upgrade it my friend!");
+        }
+    }
+
+    public List<BuildingsInformation> GetAllBuildings()
+    {
+        return buildingsList;
+    }
+}
