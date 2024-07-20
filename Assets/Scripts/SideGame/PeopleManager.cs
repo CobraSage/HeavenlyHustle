@@ -88,7 +88,6 @@ public class PeopleManager : MonoBehaviour
         {
             go.SetActive(false);
         }
-        SelectAndActivateRandomScene();
     }
 
     public void SelectAndActivateRandomScene()
@@ -147,5 +146,19 @@ public class PeopleManager : MonoBehaviour
         }
 
         return mostEvilPerson;
+    }
+
+    public void OnCloseSideGame()
+    {
+        foreach (GameObject go in listOfScenes)
+        {
+            go.SetActive(false);
+        }
+        foreach (PersonInformation person in currentPeopleList)
+        {
+            person.ClearValues();
+        }
+        currentMostEvilPerson = null;
+        currentPeopleList.Clear();
     }
 }

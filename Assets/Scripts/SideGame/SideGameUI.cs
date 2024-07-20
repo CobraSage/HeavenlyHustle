@@ -16,7 +16,20 @@ public class SideGameUI : MonoBehaviour
     [SerializeField] Button NVMButton;
     [SerializeField] GameObject uiObject;
 
+    [field: Header("Switching Stuff")]
+    [SerializeField] private CursorManager cursorManager;
+    [SerializeField] private Camera mainCamera;
+    [SerializeField] private Camera sideGameCamera;
+    [SerializeField] private Button switchButton;
+    [SerializeField] private GameObject sideGameObject;
+    [SerializeField] private Image fadeImage; 
+    [SerializeField] private float fadeDuration = 1f;
+
     private PersonInformation currentPerson;
+    private bool isSideGameActive = false;
+
+    private float cooldownTime;
+    private bool isCooldownActive = false;
 
     public static SideGameUI Instance { get; private set; }
 
@@ -39,6 +52,9 @@ public class SideGameUI : MonoBehaviour
     {
         BanishButton.onClick.AddListener(() => OnButtonsClicked(true));
         NVMButton.onClick.AddListener(() => OnButtonsClicked(false));
+        switchButton.onClick.AddListener(() => SwitchNow());
+        fadeImage.gameObject.SetActive(false);
+        switchButton.interactable = true;
     }
 
     public void UpdateValues(PersonInformation personInfo)
@@ -105,5 +121,91 @@ public class SideGameUI : MonoBehaviour
             }
         }
         CloseAndResetUI();
+    }
+
+    private void SwitchGames()
+    {
+        if(!isSideGameActive)
+        {
+            mainCamera.transform.tag = "Untagged";
+            mainCamera.gameObject.SetActive(false);
+
+            sideGameCamera.transform.tag = "MainCamera";
+            sideGameCamera.gameObject.SetActive(true);
+
+            PeopleManager.Instance.SelectAndActivateRandomScene();
+            cursorManager.checkForPeople = true;
+            sideGameObject.SetActive(true);
+            isSideGameActive = true;
+        }
+        else
+        {
+            sideGameCamera.transform.tag = "Untagged";
+            sideGameCamera.gameObject.SetActive(false);
+            
+            mainCamera.transform.tag = "MainCamera";
+            mainCamera.gameObject.SetActive(true);
+
+            PeopleManager.Instance.OnCloseSideGame();
+            cursorManager.StopCursorChange();
+            sideGameObject.SetActive(false);
+            isSideGameActive = false;
+
+            StartCoroutine(CooldownTimer());
+        }
+    }
+
+    private IEnumerator FadeTransition()
+    {
+        fadeImage.gameObject.SetActive(true);
+
+        yield return StartCoroutine(Fade(1f));
+
+        SwitchGames();
+
+        yield return StartCoroutine(Fade(0f));
+
+        fadeImage.gameObject.SetActive(false);
+    }
+
+    private IEnumerator Fade(float targetAlpha)
+    {
+        Color color = fadeImage.color;
+        float startAlpha = color.a;
+
+        for (float t = 0f; t < fadeDuration; t += Time.deltaTime)
+        {
+            float blend = Mathf.Clamp01(t / fadeDuration);
+            color.a = Mathf.Lerp(startAlpha, targetAlpha, blend);
+            fadeImage.color = color;
+            yield return null;
+        }
+
+        color.a = targetAlpha;
+        fadeImage.color = color;
+    }
+    private void SwitchNow()
+    { 
+        StartCoroutine(FadeTransition());
+    }
+    private IEnumerator CooldownTimer()
+    {
+        switchButton.interactable = false;
+        isCooldownActive = true;
+        cooldownTime = HeavenManager.Instance.sideGameCooldownTime;
+        TextMeshProUGUI buttonText = switchButton.gameObject.GetComponentInChildren<TextMeshProUGUI>();
+
+        while (cooldownTime > 0)
+        {
+            int minutes = Mathf.FloorToInt(cooldownTime / 60);
+            int seconds = Mathf.FloorToInt(cooldownTime % 60);
+            buttonText.text = $"{minutes:00}:{seconds:00}";
+            yield return new WaitForSeconds(1f);
+            cooldownTime -= 1f;
+        }
+
+        switchButton.interactable = true;
+        isCooldownActive = false;
+        buttonText.text = "Switch";
     }
 }
