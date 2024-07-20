@@ -20,6 +20,7 @@ public class MetersManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        LoadInitialValues();
     }
 
     public void UpdateHappinessMeter()
@@ -45,4 +46,11 @@ public class MetersManager : MonoBehaviour
         }
     }
 
+    private void LoadInitialValues()
+    {
+        ProfileData loadedData = ProfileDataManager.Instance.ReturnLoadedProfileData();
+        happinessMeter = loadedData.happinessMeter;
+        godSatisfactionMeter = loadedData.godSatisfactionMeter;
+        earthEvilMeter = loadedData.earthEvilMeter;
+    }
 }

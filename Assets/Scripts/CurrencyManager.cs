@@ -6,7 +6,7 @@ public class CurrencyManager : MonoBehaviour
     [field: Header("Currency Stuff")]
     public static CurrencyManager Instance { get; private set; }
     public int soulsAmount { get; private set; } = 0;
-    public int happinessPointsAmount /*{ get; private set; }*/ = 0;
+    public int happinessPointsAmount { get; private set; } = 0;
 
     [SerializeField] private TextMeshProUGUI soulsText;
     [SerializeField] private TextMeshProUGUI happinessPointsText;
@@ -44,18 +44,19 @@ public class CurrencyManager : MonoBehaviour
             UtilityScript.LogError("Happiness Points Amount Text Not Assigned!");
             return;
         }
+        LoadInitialValues();
     }
 
     public void AdjustSouls(int amount)
     {
         soulsAmount += amount;
-        //saving&loading
+        ProfileDataManager.Instance.UpdateAndSaveSoulsAmount(soulsAmount);
     }
 
     public void AdjustHappinessPoints(int amount)
     {
         happinessPointsAmount += amount;
-        //saving&loading
+        ProfileDataManager.Instance.UpdateAndSaveHappinessPointsAmount(happinessPointsAmount);
     }
 
     public int GetSoulsAmount()
@@ -66,5 +67,14 @@ public class CurrencyManager : MonoBehaviour
     public int GetHappinessPointsAmount()
     {
         return happinessPointsAmount;
+    }
+
+    private void LoadInitialValues()
+    {
+        ProfileData loadedData = ProfileDataManager.Instance.ReturnLoadedProfileData();
+        soulsAmount = loadedData.soulsAmount;
+        happinessPointsAmount = loadedData.happinessPointsAmount;
+        soulsText.text = soulsAmount.ToString();
+        happinessPointsText.text = happinessPointsAmount.ToString();
     }
 }

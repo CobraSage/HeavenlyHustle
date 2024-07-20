@@ -23,10 +23,10 @@ public class PurchasesDataManager : MonoBehaviour
         LoadPurchasesData();
     }
 
-    private void Start()
-    {
-        //ExampleUsage();
-    }
+    //private void Start()
+    //{
+    //    ExampleUsage();
+    //}
 
     private void LoadPurchasesData()
     {
@@ -37,7 +37,7 @@ public class PurchasesDataManager : MonoBehaviour
         else
         {
             purchasesData = new PurchasesData();
-            SavePurchasesData(); // Create a new save file with default data
+            SavePurchasesData(); 
         }
     }
 
@@ -101,12 +101,10 @@ public class PurchasesDataManager : MonoBehaviour
 
     public void ExampleUsage()
     {
-        // Update and save some data
         UpdateAndSaveBuildingsUnlocked(1, true);
         UpdateAndSaveBuildingsLevel(2, 3);
         UpdateAndSaveHeavenTotalCapacityLevel(5);
 
-        // Load and print data to verify
         PurchasesData loadedData = PersistentDataManager.Instance.LoadFromFile<PurchasesData>(FileName);
         Debug.Log($"Building 2 Level: {loadedData.BuildingsLevel[2]}");
         Debug.Log($"Heaven Total Capacity Level: {loadedData.HeavenTotalCapacityLevel}");
