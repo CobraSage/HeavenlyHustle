@@ -7,7 +7,8 @@ public class HeavenManager : MonoBehaviour
     public int heavenTotalCapacity = 10;
     public int heavenTotalCapacityLevel = 1;
     public int heavenCurrentCapacity = 0;
-    public float sideGameCooldownTime = 5 * 60f; 
+    public float sideGameCooldownTime = 5 * 60f;
+    public float sideGameCooldownReductionLevel = 1;
     public float soulsMultiplier = 1f;
     public int soulsMultiplierLevel = 1;
     public float happinessPointsMultiplier = 1f;
@@ -24,7 +25,10 @@ public class HeavenManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
+    private void Start()
+    {
+        LoadInitialValues();
+    }
     public void UpgradeHeavenTotalCapacityLevel()
     {
         if (heavenTotalCapacityLevel >= 5)
@@ -59,5 +63,20 @@ public class HeavenManager : MonoBehaviour
         happinessPointsMultiplierLevel++;
         happinessPointsMultiplier += 0.5f;
         // Saving&Loading
+    }
+
+    private void LoadInitialValues()
+    {
+        PurchasesData loadedValues = PurchasesDataManager.Instance.ReturnLoadedPurchasesData();
+        heavenTotalCapacityLevel = loadedValues.HeavenTotalCapacityLevel;
+        sideGameCooldownReductionLevel = loadedValues.SideGameCooldownReductionLevel;
+        soulsMultiplierLevel = loadedValues.SoulsMultiplierLevel;
+        happinessPointsMultiplierLevel = loadedValues.HappinessPointsMultiplierLevel;
+
+        heavenTotalCapacity = 0 + (5 * heavenTotalCapacityLevel);
+        heavenCurrentCapacity = 0;
+        sideGameCooldownTime = (5.5f - (0.5f * sideGameCooldownReductionLevel)) * 60f;
+        soulsMultiplier = 0.5f + (0.5f * soulsMultiplierLevel);
+        happinessPointsMultiplier = 0.5f + (0.5f * happinessPointsMultiplierLevel);
     }
 }

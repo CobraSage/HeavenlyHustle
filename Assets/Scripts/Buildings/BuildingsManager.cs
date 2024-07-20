@@ -35,7 +35,7 @@ public class BuildingsManager : MonoBehaviour
         {
             building.buildingObject.SetActive(true);
             building.OnUnlock();
-            // Saving&Loading
+            PurchasesDataManager.Instance.UpdateAndSaveBuildingsUnlocked(buildingIndex, true);
         }
         else if (building == null)
         {
@@ -60,7 +60,7 @@ public class BuildingsManager : MonoBehaviour
         if (building != null && building.isUnlocked)
         {
             building.buildingLevel++;
-            // Saving&Loading
+            PurchasesDataManager.Instance.UpdateAndSaveBuildingsLevel(buildingIndex, building.buildingLevel);
         }
         else if (building == null)
         {
@@ -86,7 +86,7 @@ public class BuildingsManager : MonoBehaviour
         {
             building.totalCapacityLevel++;
             building.totalCapacity += 5;
-            // Saving&Loading
+            PurchasesDataManager.Instance.UpdateAndSaveBuildingsCapacity(buildingIndex, building.totalCapacityLevel);
         }
         else if (building == null)
         {
@@ -112,7 +112,7 @@ public class BuildingsManager : MonoBehaviour
         {
             building.timeForEntertainmentLevel++;
             building.timeForEntertainment -= 0.5f;
-            // Saving&Loading
+            PurchasesDataManager.Instance.UpdateAndSaveBuildingsTimeLevel(buildingIndex, building.timeForEntertainmentLevel);
         }
         else if (building == null)
         {

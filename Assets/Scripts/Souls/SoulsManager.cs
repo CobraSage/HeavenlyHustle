@@ -5,9 +5,9 @@ using System.Collections.Generic;
 public class SoulsManager : MonoBehaviour
 {
     public static SoulsManager Instance { get; private set; }
-    public GameObject soulPrefab; // Prefab for the soul
-    public float spawnInterval = 2.0f; // Time interval between spawning souls
-    private int currentSouls = 3; // Initial number of souls to spawn
+    public GameObject soulPrefab; 
+    public float spawnInterval = 2.0f; 
+    private int maxSouls = 100; 
     public List<SoulsInformation> allSouls = new List<SoulsInformation>();
     public List<SoulsInformation> EngagedSouls = new List<SoulsInformation>();
     public List<SoulsInformation> FreeSouls = new List<SoulsInformation>();
@@ -76,25 +76,32 @@ public class SoulsManager : MonoBehaviour
 
     private IEnumerator SpawnSouls()
     {
-        while (currentSouls > 0 && HeavenManager.Instance.heavenCurrentCapacity < HeavenManager.Instance.heavenTotalCapacity)
+        while (true)
         {
-            yield return new WaitForSeconds(spawnInterval);
+            if((maxSouls > 0 && HeavenManager.Instance.heavenCurrentCapacity < HeavenManager.Instance.heavenTotalCapacity))
+            {
+                Vector3 spawnPosition = BuildingsManager.Instance.spawnTile.transform.position;
+                spawnPosition.y = 0;
 
-            Vector3 spawnPosition = BuildingsManager.Instance.spawnTile.transform.position;
-            spawnPosition.y = 0;
+                GameObject newSoul = Instantiate(soulPrefab, spawnPosition, Quaternion.identity);
+                newSoul.transform.parent = this.transform;
 
-            GameObject newSoul = Instantiate(soulPrefab, spawnPosition, Quaternion.identity);
-            newSoul.transform.parent = this.transform;
+                SoulsInformation soulInfo = newSoul.GetComponent<SoulsInformation>();
+                allSouls.Add(soulInfo);
+                HeavenManager.Instance.heavenCurrentCapacity++;
 
-            SoulsInformation soulInfo = newSoul.GetComponent<SoulsInformation>();
-            allSouls.Add(soulInfo);
-            HeavenManager.Instance.heavenCurrentCapacity++;
+                AssignSoulToBuilding(soulInfo);
 
-            AssignSoulToBuilding(soulInfo);
+                maxSouls--;
+                UpdateSoulLists();
 
-            currentSouls--;
+                yield return new WaitForSeconds(spawnInterval);
+            }
+            else
+            {
+                yield return new WaitForSeconds(spawnInterval); 
+            }
         }
-        UpdateSoulLists();
     }
 
     public void AssignSoulToBuilding(SoulsInformation soulInfo)

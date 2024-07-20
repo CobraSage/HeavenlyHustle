@@ -31,6 +31,11 @@ public class BuildingsInformation : MonoBehaviour
     MeshRenderer mr;
     BoxCollider bc;
 
+    private void Awake()
+    {
+        LoadInitialValues();
+    }
+
     private void Start()
     {
         mr = GetComponent<MeshRenderer>();
@@ -126,4 +131,17 @@ public class BuildingsInformation : MonoBehaviour
             }
         }
     }
+
+    private void LoadInitialValues()
+    {
+        PurchasesData loadedValues = PurchasesDataManager.Instance.ReturnLoadedPurchasesData();
+        isUnlocked = loadedValues.BuildingsUnlocked[buildingIndex];
+        buildingLevel = loadedValues.BuildingsLevel[buildingIndex];
+        timeForEntertainmentLevel = loadedValues.BuildingsTimeLevel[buildingIndex];
+        totalCapacityLevel = loadedValues.BuildingsCapacity[buildingIndex];
+
+        timeForEntertainment = 16.0f - (1.0f * timeForEntertainmentLevel);
+        totalCapacity = 0 + (5 * totalCapacityLevel);
+        currentCapacity = 0;
+}
 }
