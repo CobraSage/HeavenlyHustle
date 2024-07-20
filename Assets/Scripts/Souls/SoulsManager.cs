@@ -70,7 +70,6 @@ public class SoulsManager : MonoBehaviour
         BuildingsManager.Instance.UpdateFreeBuildingsList();
         if (soul != null)
         {
-            Debug.Log("Sending SOUL!" + buildingIndex);
             soul.gameObject.GetComponent<SoulsMovement>().StartMovement(false, buildingIndex);
         }
     }
@@ -128,7 +127,6 @@ public class SoulsManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("YES Busy");
             StartCoroutine(soulInfo.gameObject.GetComponent<SoulsMovement>().SoulsFreeRoaming());
         }
     }

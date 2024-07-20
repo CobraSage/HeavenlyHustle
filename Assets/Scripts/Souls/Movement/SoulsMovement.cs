@@ -103,7 +103,6 @@ public class SoulsMovement : MonoBehaviour
         }
         else if(!isAtStartingTile && targetHouseIndex == currentBuildingIndex && BuildingsManager.Instance.unlockedBuildingsList.Count <= 1)
         {
-            Debug.Log("Move to Spoon");
             PlotPathToHouse(true);
         }
         else

@@ -21,16 +21,24 @@ public class BuildingsInformation : MonoBehaviour
     public GameObject turningTile;
     public GameObject targetTile;
 
+    [field: Header("ButtonsManager")]
+    public GameObject purchaseButton;
+    public GameObject lockedIcon;
+
+
     private float initialYPosition;
     public List<GameObject> pathToBuilding = new List<GameObject>();
     MeshRenderer mr;
+    BoxCollider bc;
 
     private void Start()
     {
         mr = GetComponent<MeshRenderer>();
+        bc = GetComponent<BoxCollider>();
         if (!isUnlocked)
         {
             mr.enabled = false;
+            bc.enabled = false;
             foreach (var path in pathToBuilding)
             {
                 path.GetComponent<PathRise>().ChangePathVisibility(false);
@@ -43,8 +51,10 @@ public class BuildingsInformation : MonoBehaviour
                 path.GetComponent<PathRise>().ChangePathVisibility(true);
             }
             mr.enabled = true;
+            bc.enabled = true;
         }
         initialYPosition = transform.position.y;
+        ChangeButtonStates();
     }
 
     public void OnUnlock()
@@ -75,12 +85,45 @@ public class BuildingsInformation : MonoBehaviour
     private IEnumerator MoveToInitialPosition()
     {
         mr.enabled = true;
+        bc.enabled = true;
         while (Mathf.Abs(transform.position.y - initialYPosition) > 0.01f)
         {
             Vector3 newPosition = transform.position;
             newPosition.y = Mathf.MoveTowards(newPosition.y, initialYPosition, speedOfRising * Time.deltaTime);
             transform.position = newPosition;
             yield return null;
+        }
+    }
+
+    public void ChangeButtonStates()
+    {
+        if(isUnlocked) 
+        {
+            lockedIcon.SetActive(false);
+            purchaseButton.SetActive(false);
+            return;
+        }
+        if (buildingIndex == 0)
+        {
+            return;
+        }
+        else if (buildingIndex == 1 && isUnlocked == false)
+        {
+            lockedIcon.SetActive(false);
+            purchaseButton.SetActive(true);
+        }
+        else
+        {
+            if (BuildingsManager.Instance.buildingsList[buildingIndex - 1].isUnlocked == true)
+            {
+                lockedIcon.SetActive(false);
+                purchaseButton.SetActive(true);
+            }
+            else
+            {
+                lockedIcon.SetActive(true);
+                purchaseButton.SetActive(false);
+            }
         }
     }
 }

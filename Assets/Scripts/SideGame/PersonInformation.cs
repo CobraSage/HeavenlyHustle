@@ -58,13 +58,6 @@ public class PersonInformation : MonoBehaviour
 
     public void SelectPerson()
     {
-        if(this == PeopleManager.Instance.currentMostEvilPerson)
-        {
-            Debug.Log("Most Evil Person!");
-        }
-        else
-        {
-            Debug.Log("Wrong!");
-        }
+        SideGameUI.Instance.UpdateValues(this);
     }
 }
