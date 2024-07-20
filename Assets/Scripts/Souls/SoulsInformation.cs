@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SoulsInformation : MonoBehaviour
 {
-    public int happinessLevel; 
+    public float happinessLevel; 
     public bool isEngaged = false;
 
     public void EngageSoul()
@@ -31,15 +31,22 @@ public class SoulsInformation : MonoBehaviour
     {
         GetComponent<MeshRenderer>().enabled = true;
         isEngaged = false;
-        AdjustHappinessLevel(2);
+
+        BuildingsInformation currentBuilding = BuildingsManager.Instance.buildingsList[GetComponent<SoulsMovement>().currentBuildingIndex];
+
+        float currentBuildingLevel = currentBuilding.buildingLevel;
+        float happinessLevelToAdjust = (0.1f * currentBuildingLevel) * (Random.Range(0f, 1f) < 0.75f ? 1 : -1);
+        AdjustHappinessLevel(happinessLevelToAdjust);
+        
         SoulsManager.Instance.UpdateSoulLists(this);
         SoulsManager.Instance.AssignSoulToBuilding(this);
-        BuildingsManager.Instance.buildingsList[GetComponent<SoulsMovement>().currentBuildingIndex].currentCapacity -= 1;
+        currentBuilding.currentCapacity -= 1;
         BuildingsManager.Instance.UpdateFreeBuildingsList();
     }
 
-    public void AdjustHappinessLevel(int amount)
+    public void AdjustHappinessLevel(float amount)
     {
         happinessLevel = Mathf.Clamp(happinessLevel + amount, 0, 10);
+        MetersManager.Instance.UpdateHappinessMeter();
     }
 }
