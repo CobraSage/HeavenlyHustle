@@ -33,7 +33,6 @@ public class BuildingsManager : MonoBehaviour
         BuildingsInformation building = buildingsList.Find(b => b.buildingIndex == buildingIndex);
         if (building != null && !building.isUnlocked)
         {
-            building.buildingObject.SetActive(true);
             building.OnUnlock();
             PurchasesDataManager.Instance.UpdateAndSaveBuildingsUnlocked(buildingIndex, true);
         }

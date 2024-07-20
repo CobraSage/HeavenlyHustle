@@ -5,6 +5,7 @@ using System.Linq;
 
 public class BuildingsInformation : MonoBehaviour
 {
+    [field: Header("Basic Building Related Properties")]
     public int buildingIndex;
     public bool isUnlocked = false;
     public int buildingLevel = 1;
@@ -13,7 +14,6 @@ public class BuildingsInformation : MonoBehaviour
     public int totalCapacity = 5;
     public int totalCapacityLevel = 1;
     public int currentCapacity = 0;
-    public GameObject buildingObject = null;
     [SerializeField] private float yOffset;
     [SerializeField] private float speedOfRising;
 
@@ -25,6 +25,11 @@ public class BuildingsInformation : MonoBehaviour
     public GameObject purchaseButton;
     public GameObject lockedIcon;
 
+    [field: Header("Purchasing Stuff")]
+    public int buildingUnlockPrice = 0;
+    public int buildingLevelBasePrice = 100;
+    public int buildingCapacityBasePrice = 250;
+    public int buildingTimeBasePrice = 500;
 
     private float initialYPosition;
     public List<GameObject> pathToBuilding = new List<GameObject>();
@@ -65,6 +70,10 @@ public class BuildingsInformation : MonoBehaviour
     public void OnUnlock()
     {
         isUnlocked = true;
+        foreach (BuildingsInformation buildingInfo in BuildingsManager.Instance.buildingsList)
+        {
+            buildingInfo.ChangeButtonStates();
+        }
         StartCoroutine(UnlockPaths());
     }
 
