@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class BuildingsManager : MonoBehaviour
 {
@@ -7,6 +8,8 @@ public class BuildingsManager : MonoBehaviour
     public GameObject spawnTile;
 
     public List<BuildingsInformation> buildingsList = new List<BuildingsInformation>();
+    public List<BuildingsInformation> freeBuildingsList = new List<BuildingsInformation>();
+    public List<BuildingsInformation> unlockedBuildingsList = new List<BuildingsInformation>();
 
     private void Awake()
     {
@@ -18,6 +21,11 @@ public class BuildingsManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+    private void Start()
+    {
+        UpdateFreeBuildingsList();
+        UpdateUnlockedBuildingsList();
     }
 
     public void UnlockBuilding(int buildingIndex)
@@ -116,5 +124,16 @@ public class BuildingsManager : MonoBehaviour
             UtilityScript.LogError("Building " + building.name + " is locked so you cannot upgrade it my friend!");
             return;
         }
+    }
+
+    public void UpdateFreeBuildingsList()
+    {
+        freeBuildingsList = new List<BuildingsInformation>();
+        freeBuildingsList = buildingsList.Where(b => b.isUnlocked && b.currentCapacity < b.totalCapacity).ToList();
+    }
+    public void UpdateUnlockedBuildingsList()
+    {
+        unlockedBuildingsList = new List<BuildingsInformation>();
+        unlockedBuildingsList = buildingsList.Where(b => b.isUnlocked).ToList();
     }
 }

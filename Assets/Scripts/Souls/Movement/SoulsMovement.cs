@@ -2,32 +2,49 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 
 public class SoulsMovement : MonoBehaviour
 {
     [field: Header("Movement")]
     public int currentBuildingIndex = 0;
-    public bool isEngaged = false;
     public float speed = 5f;
+    public bool isFreeRoaming = false;
+    public bool isAtStartingTile = true;
 
     private List<Transform> currentPath = new List<Transform>();
-    private bool justSpawned = true;
+    private int currentTargetHouse = 0;
+    private bool currentMoveToSpawn = false;
 
-    public void PlotPathToHouse(bool moveToSpawn = false, int targetHouseIndex = 99)
+    public void StartMovement(bool moveToSpawn = false, int targetHouseIndex = 99)
+    {
+        if (isFreeRoaming)
+        {
+            currentTargetHouse = targetHouseIndex;
+            currentMoveToSpawn = moveToSpawn;
+            isFreeRoaming = false;
+        }
+        else
+        {
+            PlotPathToHouse(moveToSpawn, targetHouseIndex);
+        }
+    }
+
+    private void PlotPathToHouse(bool moveToSpawn = false, int targetHouseIndex = 99)
     {
         currentPath = new List<Transform>();
-        if (!moveToSpawn && currentBuildingIndex == targetHouseIndex)
+        if (!isAtStartingTile && !moveToSpawn && currentBuildingIndex == targetHouseIndex)
         {
             return;
         }
-        if (justSpawned)
+        if (isAtStartingTile)
         {
             currentPath.Add(BuildingsManager.Instance.spawnTile.transform);
-            justSpawned = false;
+            isAtStartingTile = false;
         }
         if (!moveToSpawn)
         {
-            if(BuildingsManager.Instance.buildingsList.FirstOrDefault(b => b.buildingIndex == currentBuildingIndex).turningTile != null)
+            if (BuildingsManager.Instance.buildingsList.FirstOrDefault(b => b.buildingIndex == currentBuildingIndex).turningTile != null)
             {
                 currentPath.Add(BuildingsManager.Instance.buildingsList.FirstOrDefault(b => b.buildingIndex == currentBuildingIndex).turningTile.transform);
             }
@@ -44,8 +61,10 @@ public class SoulsMovement : MonoBehaviour
         }
         else if (moveToSpawn)
         {
+            currentPath.Clear();
             currentPath.Add(BuildingsManager.Instance.buildingsList.FirstOrDefault(b => b.buildingIndex == currentBuildingIndex).turningTile.transform);
             currentPath.Add(BuildingsManager.Instance.spawnTile.transform);
+            isAtStartingTile = true;
         }
         StartCoroutine(MoveAlongPath());
     }
@@ -61,5 +80,46 @@ public class SoulsMovement : MonoBehaviour
                 yield return null;
             }
         }
+        currentPath.Clear();
+        if (!isFreeRoaming)
+        {
+            GetComponent<SoulsInformation>().StartEngagementTimer(BuildingsManager.Instance.buildingsList.FirstOrDefault(b => b.buildingIndex == currentBuildingIndex).timeForEntertainment);
+        }
     }
+
+    public IEnumerator SoulsFreeRoaming()
+    {
+        isFreeRoaming = true;
+        int targetHouseIndex = currentBuildingIndex;
+        GetComponent<SoulsInformation>().AdjustHappinessLevel(-1);
+
+        if(BuildingsManager.Instance.unlockedBuildingsList.Count > 1)
+        {
+            while (targetHouseIndex == currentBuildingIndex)
+            {
+                targetHouseIndex = Random.Range(0, BuildingsManager.Instance.unlockedBuildingsList.Count);
+            }
+            PlotPathToHouse(false, targetHouseIndex);
+        }
+        else if(!isAtStartingTile && targetHouseIndex == currentBuildingIndex && BuildingsManager.Instance.unlockedBuildingsList.Count <= 1)
+        {
+            Debug.Log("Move to Spoon");
+            PlotPathToHouse(true);
+        }
+        else
+        {
+            targetHouseIndex = currentBuildingIndex;
+            PlotPathToHouse(false, targetHouseIndex);
+        }
+
+        currentBuildingIndex = targetHouseIndex;
+
+        yield return new WaitUntil(() => currentPath.Count == 0);
+        yield return new WaitForSeconds(2);
+
+        isFreeRoaming = false;
+        SoulsManager.Instance.AssignSoulToBuilding(this.gameObject.GetComponent<SoulsInformation>());
+        yield return null;
+    }
+
 }

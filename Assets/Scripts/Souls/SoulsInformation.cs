@@ -6,13 +6,19 @@ public class SoulsInformation : MonoBehaviour
     public int happinessLevel; 
     public bool isEngaged = false;
 
-    public void EngageSoul(float time)
+    public void EngageSoul()
     {
         if (!isEngaged)
         {
             isEngaged = true;
-            StartCoroutine(EngagementTimer(time));
+            SoulsManager.Instance.UpdateSoulLists(this);
         }
+    }
+
+    public void StartEngagementTimer(float time)
+    {
+        GetComponent<MeshRenderer>().enabled = false;
+        StartCoroutine(EngagementTimer(time));
     }
 
     private IEnumerator EngagementTimer(float time)
@@ -23,12 +29,16 @@ public class SoulsInformation : MonoBehaviour
 
     private void OnEngagementComplete()
     {
+        GetComponent<MeshRenderer>().enabled = true;
         isEngaged = false;
         AdjustHappinessLevel(2);
         SoulsManager.Instance.UpdateSoulLists(this);
+        SoulsManager.Instance.AssignSoulToBuilding(this);
+        BuildingsManager.Instance.buildingsList[GetComponent<SoulsMovement>().currentBuildingIndex].currentCapacity -= 1;
+        BuildingsManager.Instance.UpdateFreeBuildingsList();
     }
 
-    private void AdjustHappinessLevel(int amount)
+    public void AdjustHappinessLevel(int amount)
     {
         happinessLevel = Mathf.Clamp(happinessLevel + amount, 0, 10);
     }

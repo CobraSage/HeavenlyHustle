@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class BuildingsInformation : MonoBehaviour
 {
@@ -67,6 +68,8 @@ public class BuildingsInformation : MonoBehaviour
         newPosition.y -= yOffset;
         transform.position = newPosition;
         StartCoroutine(MoveToInitialPosition());
+        BuildingsManager.Instance.UpdateUnlockedBuildingsList();
+        BuildingsManager.Instance.UpdateFreeBuildingsList();
     }
 
     private IEnumerator MoveToInitialPosition()

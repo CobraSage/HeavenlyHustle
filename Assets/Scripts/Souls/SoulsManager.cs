@@ -1,14 +1,16 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class SoulsManager : MonoBehaviour
 {
     public static SoulsManager Instance { get; private set; }
-
+    public GameObject soulPrefab; // Prefab for the soul
+    public float spawnInterval = 2.0f; // Time interval between spawning souls
+    private int currentSouls = 3; // Initial number of souls to spawn
     public List<SoulsInformation> allSouls = new List<SoulsInformation>();
     public List<SoulsInformation> EngagedSouls = new List<SoulsInformation>();
     public List<SoulsInformation> FreeSouls = new List<SoulsInformation>();
-    public List<BuildingsInformation> buildings = new List<BuildingsInformation>();
 
     private void Awake()
     {
@@ -26,6 +28,7 @@ public class SoulsManager : MonoBehaviour
     private void Start()
     {
         UpdateSoulLists();
+        StartCoroutine(SpawnSouls());
     }
 
     public void UpdateSoulLists()
@@ -60,15 +63,74 @@ public class SoulsManager : MonoBehaviour
         }
     }
 
-    public void SendSoulToBuilding(SoulsInformation soul, int buildingIndex)
+    private void SendSoulToBuilding(SoulsInformation soul, int buildingIndex)
     {
-        BuildingsInformation building = buildings.Find(b => b.buildingIndex == buildingIndex);
-        if (building != null)
+        BuildingsInformation building = BuildingsManager.Instance.buildingsList.Find(b => b.buildingIndex == buildingIndex);
+        building.currentCapacity += 1;
+        soul.EngageSoul();
+        BuildingsManager.Instance.UpdateFreeBuildingsList();
+        if (soul != null)
         {
-            //PathNode startNode = soul.GetComponent<PathNode>(); // Assuming each soul starts at a specific path node
-            //PathNode targetNode = building.pathToBuilding[building.pathToBuilding.Count - 1]; // Last node in the path to building
-            //SoulsMovement soulMovement = soul.GetComponent<SoulsMovement>();
-            //soulMovement.FindPath(startNode, targetNode);
+            Debug.Log("Sending SOUL!" + buildingIndex);
+            soul.gameObject.GetComponent<SoulsMovement>().StartMovement(false, buildingIndex);
+        }
+    }
+
+    private IEnumerator SpawnSouls()
+    {
+        while (currentSouls > 0 && HeavenManager.Instance.heavenCurrentCapacity < HeavenManager.Instance.heavenTotalCapacity)
+        {
+            yield return new WaitForSeconds(spawnInterval);
+
+            Vector3 spawnPosition = BuildingsManager.Instance.spawnTile.transform.position;
+            spawnPosition.y = 0;
+
+            GameObject newSoul = Instantiate(soulPrefab, spawnPosition, Quaternion.identity);
+            newSoul.transform.parent = this.transform;
+
+            SoulsInformation soulInfo = newSoul.GetComponent<SoulsInformation>();
+            allSouls.Add(soulInfo);
+            HeavenManager.Instance.heavenCurrentCapacity++;
+
+            AssignSoulToBuilding(soulInfo);
+
+            currentSouls--;
+        }
+        UpdateSoulLists();
+    }
+
+    public void AssignSoulToBuilding(SoulsInformation soulInfo)
+    {
+        if (BuildingsManager.Instance.freeBuildingsList.Count > 0)
+        {
+            BuildingsInformation freeBuilding;
+            if (BuildingsManager.Instance.freeBuildingsList.Count > 1)
+            {
+                freeBuilding = BuildingsManager.Instance.freeBuildingsList[Random.Range(0, BuildingsManager.Instance.freeBuildingsList.Count)];
+                SendSoulToBuilding(soulInfo, freeBuilding.buildingIndex);
+            }
+            else if (BuildingsManager.Instance.freeBuildingsList.Count <= 1)
+            {
+                if (!soulInfo.gameObject.GetComponent<SoulsMovement>().isAtStartingTile && soulInfo.gameObject.GetComponent<SoulsMovement>().currentBuildingIndex == BuildingsManager.Instance.freeBuildingsList[0].buildingIndex)
+                {
+                    StartCoroutine(soulInfo.gameObject.GetComponent<SoulsMovement>().SoulsFreeRoaming());
+                }
+                else
+                {
+                    freeBuilding = BuildingsManager.Instance.freeBuildingsList[0];
+                    SendSoulToBuilding(soulInfo, freeBuilding.buildingIndex);
+                }
+            }
+            else
+            {
+                UtilityScript.LogError("Weird Condition in Souls Manager's AssignSoulToBuilding function!");
+                return;
+            }
+        }
+        else
+        {
+            Debug.Log("YES Busy");
+            StartCoroutine(soulInfo.gameObject.GetComponent<SoulsMovement>().SoulsFreeRoaming());
         }
     }
 }
