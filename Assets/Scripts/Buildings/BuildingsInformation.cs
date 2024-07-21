@@ -6,6 +6,7 @@ using System.Linq;
 public class BuildingsInformation : MonoBehaviour
 {
     [field: Header("Basic Building Related Properties")]
+    public float happinessPointsEarning = 0.5f;
     public string buildingName;
     public int buildingIndex;
     public bool isUnlocked = false;
@@ -150,8 +151,9 @@ public class BuildingsInformation : MonoBehaviour
         timeForEntertainmentLevel = loadedValues.BuildingsTimeLevel[buildingIndex];
         totalCapacityLevel = loadedValues.BuildingsCapacity[buildingIndex];
 
-        timeForEntertainment = 16.0f - (1.0f * timeForEntertainmentLevel);
-        totalCapacity = 0 + (5 * totalCapacityLevel);
+        timeForEntertainment = timeForEntertainment - (1.0f * (timeForEntertainmentLevel - 1));
+        totalCapacity = totalCapacity + (5 * (totalCapacityLevel-1));
+        happinessPointsEarning = happinessPointsEarning + (0.1f * (buildingLevel - 1));
         currentCapacity = 0;
-}
+    }
 }

@@ -195,6 +195,7 @@ public class PurchaseManager : MonoBehaviour
         buildingLevelButton.onClick.RemoveAllListeners();
         buildingCapacityLevelButton.onClick.RemoveAllListeners();
         buildingTimeLevelButton.onClick.RemoveAllListeners();
+        Time.timeScale = 1.0f;
         upgradeUI.SetActive(false);
     }    
     #endregion

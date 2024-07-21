@@ -34,8 +34,7 @@ public class SoulsInformation : MonoBehaviour
 
         BuildingsInformation currentBuilding = BuildingsManager.Instance.buildingsList[GetComponent<SoulsMovement>().currentBuildingIndex];
 
-        float currentBuildingLevel = currentBuilding.buildingLevel;
-        float happinessLevelToAdjust = (0.1f * currentBuildingLevel) * (Random.Range(0f, 1f) < 0.75f ? 1 : -1);
+        float happinessLevelToAdjust = (currentBuilding.happinessPointsEarning) * (Random.Range(0f, 1f) < 0.75f ? 1 : -1);
         AdjustHappinessLevel(happinessLevelToAdjust);
         
         SoulsManager.Instance.UpdateSoulLists(this);
@@ -46,6 +45,10 @@ public class SoulsInformation : MonoBehaviour
 
     public void AdjustHappinessLevel(float amount)
     {
+        if (amount > 0)
+        {
+            CurrencyManager.Instance.AdjustHappinessPoints(Mathf.RoundToInt(amount * 10));
+        }
         happinessLevel = Mathf.Clamp(happinessLevel + amount, 0, 10);
         MetersManager.Instance.UpdateHappinessMeter();
     }

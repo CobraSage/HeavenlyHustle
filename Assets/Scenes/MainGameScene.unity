@@ -2067,7 +2067,7 @@ MonoBehaviour:
   buildingLevelButton: {fileID: 1412858114}
   buildingCapacityLevelText: {fileID: 1061200028}
   buildingCapacityLevelPrice: {fileID: 2049410195}
-  buildingCapacityLevelButton: {fileID: 351839688}
+  buildingCapacityLevelButton: {fileID: 723572872}
   buildingTimeLevelText: {fileID: 1291518451}
   buildingTimeLevelPrice: {fileID: 328384006}
   buildingTimeLevelButton: {fileID: 351839688}
@@ -8061,6 +8061,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0089432c1d6f59f40b69dccaeb4e45bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  happinessPointsAmount: 0
   soulsText: {fileID: 834480194}
   happinessPointsText: {fileID: 2120346645}
 --- !u!1 &677626302
@@ -8210,13 +8211,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1ec287aaa1dd934aa418f953cb785a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  happinessPointsEarning: 0.4
   buildingName: Movie Theater
   buildingIndex: 3
   isUnlocked: 0
   buildingLevel: 1
-  timeForEntertainment: 5
+  timeForEntertainment: 7
   timeForEntertainmentLevel: 1
-  totalCapacity: 5
+  totalCapacity: 8
   totalCapacityLevel: 1
   currentCapacity: 0
   yOffset: 20
@@ -8225,10 +8227,10 @@ MonoBehaviour:
   targetTile: {fileID: 162159620}
   purchaseButton: {fileID: 1666415870}
   lockedIcon: {fileID: 1168927578}
-  buildingUnlockPrice: 5000
-  buildingLevelBasePrice: 1250
-  buildingCapacityBasePrice: 1500
-  buildingTimeBasePrice: 1750
+  buildingUnlockPrice: 100
+  buildingLevelBasePrice: 50
+  buildingCapacityBasePrice: 55
+  buildingTimeBasePrice: 60
   pathToBuilding:
   - {fileID: 1120970289}
   - {fileID: 2026267557}
@@ -8848,13 +8850,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1ec287aaa1dd934aa418f953cb785a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  happinessPointsEarning: 0.5
   buildingName: Library
   buildingIndex: 4
   isUnlocked: 0
   buildingLevel: 1
   timeForEntertainment: 5
   timeForEntertainmentLevel: 1
-  totalCapacity: 5
+  totalCapacity: 10
   totalCapacityLevel: 1
   currentCapacity: 0
   yOffset: 20
@@ -8863,10 +8866,10 @@ MonoBehaviour:
   targetTile: {fileID: 800581633}
   purchaseButton: {fileID: 810012188}
   lockedIcon: {fileID: 601268554}
-  buildingUnlockPrice: 10000
-  buildingLevelBasePrice: 1750
-  buildingCapacityBasePrice: 2000
-  buildingTimeBasePrice: 2250
+  buildingUnlockPrice: 200
+  buildingLevelBasePrice: 65
+  buildingCapacityBasePrice: 70
+  buildingTimeBasePrice: 75
   pathToBuilding:
   - {fileID: 705952678}
 --- !u!65 &733572106
@@ -14599,13 +14602,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1ec287aaa1dd934aa418f953cb785a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  happinessPointsEarning: 0.3
   buildingName: Bar
   buildingIndex: 2
   isUnlocked: 0
   buildingLevel: 1
-  timeForEntertainment: 5
+  timeForEntertainment: 10
   timeForEntertainmentLevel: 1
-  totalCapacity: 5
+  totalCapacity: 7
   totalCapacityLevel: 1
   currentCapacity: 0
   yOffset: 20
@@ -14614,10 +14618,10 @@ MonoBehaviour:
   targetTile: {fileID: 1939375205}
   purchaseButton: {fileID: 1506224149}
   lockedIcon: {fileID: 2140629510}
-  buildingUnlockPrice: 1500
-  buildingLevelBasePrice: 750
-  buildingCapacityBasePrice: 1000
-  buildingTimeBasePrice: 1250
+  buildingUnlockPrice: 50
+  buildingLevelBasePrice: 35
+  buildingCapacityBasePrice: 40
+  buildingTimeBasePrice: 45
   pathToBuilding:
   - {fileID: 1580068553}
   - {fileID: 1035922837}
@@ -14982,11 +14986,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1ec287aaa1dd934aa418f953cb785a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  happinessPointsEarning: 0.2
   buildingName: Bowling Alley
   buildingIndex: 1
   isUnlocked: 1
   buildingLevel: 1
-  timeForEntertainment: 5
+  timeForEntertainment: 13
   timeForEntertainmentLevel: 1
   totalCapacity: 5
   totalCapacityLevel: 1
@@ -14997,10 +15002,10 @@ MonoBehaviour:
   targetTile: {fileID: 388755260}
   purchaseButton: {fileID: 1896632789}
   lockedIcon: {fileID: 890231336}
-  buildingUnlockPrice: 500
-  buildingLevelBasePrice: 250
-  buildingCapacityBasePrice: 500
-  buildingTimeBasePrice: 750
+  buildingUnlockPrice: 10
+  buildingLevelBasePrice: 20
+  buildingCapacityBasePrice: 25
+  buildingTimeBasePrice: 30
   pathToBuilding:
   - {fileID: 1829976140}
   - {fileID: 323539165}
@@ -16274,13 +16279,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1ec287aaa1dd934aa418f953cb785a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  happinessPointsEarning: 0.1
   buildingName: Cafe
   buildingIndex: 0
   isUnlocked: 1
   buildingLevel: 1
-  timeForEntertainment: 5
+  timeForEntertainment: 15
   timeForEntertainmentLevel: 1
-  totalCapacity: 1
+  totalCapacity: 3
   totalCapacityLevel: 1
   currentCapacity: 0
   yOffset: 20
@@ -16290,9 +16296,9 @@ MonoBehaviour:
   purchaseButton: {fileID: 1572060356}
   lockedIcon: {fileID: 1757669600}
   buildingUnlockPrice: 0
-  buildingLevelBasePrice: 100
-  buildingCapacityBasePrice: 250
-  buildingTimeBasePrice: 500
+  buildingLevelBasePrice: 5
+  buildingCapacityBasePrice: 10
+  buildingTimeBasePrice: 15
   pathToBuilding:
   - {fileID: 1453219363}
   - {fileID: 1192455446}

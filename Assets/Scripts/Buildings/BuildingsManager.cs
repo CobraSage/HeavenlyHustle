@@ -59,6 +59,7 @@ public class BuildingsManager : MonoBehaviour
         if (building != null && building.isUnlocked)
         {
             building.buildingLevel++;
+            building.happinessPointsEarning += 0.1f;
             PurchasesDataManager.Instance.UpdateAndSaveBuildingsLevel(buildingIndex, building.buildingLevel);
         }
         else if (building == null)
