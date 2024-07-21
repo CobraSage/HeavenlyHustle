@@ -6,6 +6,7 @@ using System.Linq;
 public class BuildingsInformation : MonoBehaviour
 {
     [field: Header("Basic Building Related Properties")]
+    public string buildingName;
     public int buildingIndex;
     public bool isUnlocked = false;
     public int buildingLevel = 1;

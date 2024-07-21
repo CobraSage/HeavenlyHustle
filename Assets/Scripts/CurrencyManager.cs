@@ -6,7 +6,7 @@ public class CurrencyManager : MonoBehaviour
     [field: Header("Currency Stuff")]
     public static CurrencyManager Instance { get; private set; }
     public int soulsAmount { get; private set; } = 0;
-    public int happinessPointsAmount { get; private set; } = 0;
+    public int happinessPointsAmount = 0;
 
     [SerializeField] private TextMeshProUGUI soulsText;
     [SerializeField] private TextMeshProUGUI happinessPointsText;
