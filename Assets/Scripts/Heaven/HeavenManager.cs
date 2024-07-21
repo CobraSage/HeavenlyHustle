@@ -76,7 +76,7 @@ public class HeavenManager : MonoBehaviour
         heavenTotalCapacity = 0 + (5 * heavenTotalCapacityLevel);
         heavenCurrentCapacity = 0;
         sideGameCooldownTime = (5.5f - (0.5f * sideGameCooldownReductionLevel)) * 60f;
-        soulsMultiplier = 0.5f + (0.5f * soulsMultiplierLevel);
+        soulsMultiplier = soulsMultiplierLevel;
         happinessPointsMultiplier = 0.5f + (0.5f * happinessPointsMultiplierLevel);
     }
 }

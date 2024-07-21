@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class SideGameUI : MonoBehaviour
 {
-    [field: Header("UI Objects")]
+    [field: Header("Person Details UI")]
     [SerializeField] private TextMeshProUGUI personName;
     [SerializeField] private TextMeshProUGUI personAge;
     [SerializeField] private TextMeshProUGUI personDoB;
@@ -14,7 +14,8 @@ public class SideGameUI : MonoBehaviour
     [SerializeField] List<TextMeshProUGUI> personalityList = new List<TextMeshProUGUI>();
     [SerializeField] Button BanishButton;
     [SerializeField] Button NVMButton;
-    [SerializeField] GameObject uiObject;
+    [SerializeField] GameObject personDetailsUIObject;
+
 
     [field: Header("Switching Stuff")]
     [SerializeField] private CursorManager cursorManager;
@@ -24,6 +25,41 @@ public class SideGameUI : MonoBehaviour
     [SerializeField] private GameObject sideGameObject;
     [SerializeField] private Image fadeImage; 
     [SerializeField] private float fadeDuration = 1f;
+
+    [field: Header("Game Over UI")]
+    [SerializeField] GameObject gameOverUIObject;
+    [SerializeField] private TextMeshProUGUI resultText;
+    [SerializeField] private TextMeshProUGUI conclusionText;
+    [SerializeField] private TextMeshProUGUI soulsEarned;
+    [SerializeField] private Button moveOnButton;
+    private List<string> losingStrings = new List<string>
+    {
+        "Oops! You sent an innocent soul away and let the villain stay. Are you working for the dark side?",
+        "You exiled the wrong person! Now chaos reigns. Are you sure you’re not a demon in disguise?",
+        "The wrong soul was banished, and evil still roams free. Are you a secret agent of darkness?",
+        "You let the wicked one slip through your fingers! Is there a devilish side to you?",
+        "An innocent soul is gone, and the evil one remains. Are you playing for the other team?",
+        "You banished the wrong soul, and now the world suffers. Are you sure you’re not a devil’s advocate?",
+        "The most evil person is still here, thanks to you. Are you secretly plotting with the underworld?",
+        "You sent the wrong soul packing, leaving evil behind. Are you a hidden harbinger of doom?",
+        "The innocent are gone, and the wicked thrive. Are you a covert agent of chaos?",
+        "You exiled the wrong person, and now darkness prevails. Are you secretly a minion of the devil?"
+    };
+    private List<string> winningStrings = new List<string>
+    {
+        "Great job! The evil has been banished, and Earth is safer thanks to you!",
+        "You did it! The villain is gone, and the world is a better place because of your actions!",
+        "Success! The wicked one is no more, and peace prevails. Well done!",
+        "Congratulations! You’ve rid the world of evil, making it a brighter place!",
+        "Victory! The dark force has been banished, and Earth is grateful for your bravery!",
+        "Well done! The evil has been vanquished, and harmony is restored thanks to you!",
+        "Fantastic! The villain is banished, and the world rejoices in your triumph!",
+        "Bravo! You’ve sent the evil packing, and Earth is a bit more heavenly now!",
+        "Excellent work! The wicked one is gone, and the world is a safer place because of you!",
+        "Hooray! The evil has been banished, and Earth is a better place thanks to your efforts!"
+    };
+
+    [SerializeField] GameObject uiObject;
 
     private PersonInformation currentPerson;
     private bool isSideGameActive = false;
@@ -45,6 +81,8 @@ public class SideGameUI : MonoBehaviour
         }
 
         uiObject.SetActive(false);
+        gameOverUIObject.SetActive(false);
+        personDetailsUIObject.SetActive(false);
         ClearAllText();
     }
 
@@ -53,10 +91,12 @@ public class SideGameUI : MonoBehaviour
         BanishButton.onClick.AddListener(() => OnButtonsClicked(true));
         NVMButton.onClick.AddListener(() => OnButtonsClicked(false));
         switchButton.onClick.AddListener(() => SwitchNow());
+        moveOnButton.onClick.AddListener(() => OnMoveOnButtonClicked());
         fadeImage.gameObject.SetActive(false);
         switchButton.interactable = true;
     }
 
+    #region Person Details
     public void UpdateValues(PersonInformation personInfo)
     {
         currentPerson = personInfo;
@@ -65,7 +105,10 @@ public class SideGameUI : MonoBehaviour
         personDoB.text = personInfo.DateOfBirth;
         personDoD.text = personInfo.DateOfDeath;
         PopulatePersonalityList(personInfo);
+        gameOverUIObject.SetActive(false);
+        personDetailsUIObject.SetActive(true);
         uiObject.SetActive(true);
+        cursorManager.StopCursorChange();
     }
 
     private void PopulatePersonalityList(PersonInformation personInfo)
@@ -84,7 +127,7 @@ public class SideGameUI : MonoBehaviour
 
         for (int i = 0; i < personalityList.Count && i < combinedDeeds.Count; i++)
         {
-            personalityList[i].text = combinedDeeds[i];
+            personalityList[i].text = "- " + combinedDeeds[i];
         }
     }
     public void ClearAllText()
@@ -113,16 +156,52 @@ public class SideGameUI : MonoBehaviour
         {
             if(currentPerson == PeopleManager.Instance.currentMostEvilPerson)
             {
-                Debug.Log("Correct Evil Person!");
+                TriggerGameOver(true);
             }
             else
             {
-                Debug.Log("Wrong Person Chosen F");
+                TriggerGameOver(false);
             }
         }
-        CloseAndResetUI();
+        else
+        {
+            CloseAndResetUI();
+            cursorManager.checkForPeople = true;
+        }
+    }
+    #endregion
+
+    #region Game Over
+    private void TriggerGameOver(bool hasWon)
+    {
+        gameOverUIObject.SetActive(true);
+        personDetailsUIObject.SetActive(false);
+        if (hasWon)
+        {
+            int soulsEarnedValue = 1 * HeavenManager.Instance.soulsMultiplierLevel;
+            resultText.text = "Evil Soul Banished!";
+            conclusionText.text = winningStrings[Random.Range(0,winningStrings.Count)];
+            soulsEarned.text = "Souls Earned: " + soulsEarnedValue.ToString();
+            CurrencyManager.Instance.AdjustSouls(soulsEarnedValue);
+        }
+        else
+        {
+            resultText.text = "Innocent Soul Banished...";
+            conclusionText.text = losingStrings[Random.Range(0, losingStrings.Count)];
+            soulsEarned.text = "Souls Earned: 0";
+        }
     }
 
+    private void OnMoveOnButtonClicked()
+    {
+        gameOverUIObject.SetActive(false);
+        personDetailsUIObject.SetActive(false);
+        CloseAndResetUI();
+        SwitchNow();
+    }
+    #endregion
+
+    #region Switching Games
     private void SwitchGames()
     {
         if(!isSideGameActive)
@@ -137,6 +216,7 @@ public class SideGameUI : MonoBehaviour
             cursorManager.checkForPeople = true;
             sideGameObject.SetActive(true);
             isSideGameActive = true;
+            switchButton.gameObject.SetActive(false);
         }
         else
         {
@@ -150,6 +230,7 @@ public class SideGameUI : MonoBehaviour
             cursorManager.StopCursorChange();
             sideGameObject.SetActive(false);
             isSideGameActive = false;
+            switchButton.gameObject.SetActive(true);
 
             StartCoroutine(CooldownTimer());
         }
@@ -188,6 +269,9 @@ public class SideGameUI : MonoBehaviour
     { 
         StartCoroutine(FadeTransition());
     }
+    #endregion
+
+    #region Cooldown
     private IEnumerator CooldownTimer()
     {
         switchButton.interactable = false;
@@ -208,4 +292,5 @@ public class SideGameUI : MonoBehaviour
         isCooldownActive = false;
         buttonText.text = "Switch";
     }
+    #endregion
 }
