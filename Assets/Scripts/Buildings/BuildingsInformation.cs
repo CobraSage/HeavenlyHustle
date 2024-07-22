@@ -18,6 +18,7 @@ public class BuildingsInformation : MonoBehaviour
     public int currentCapacity = 0;
     [SerializeField] private float yOffset;
     [SerializeField] private float speedOfRising;
+    [SerializeField] private GameObject buildingVisuals;
 
     [field: Header("Path Finding For Souls")]
     public GameObject turningTile;
@@ -49,6 +50,7 @@ public class BuildingsInformation : MonoBehaviour
         bc = GetComponent<BoxCollider>();
         if (!isUnlocked)
         {
+            buildingVisuals.SetActive(false);
             mr.enabled = false;
             bc.enabled = false;
             foreach (var path in pathToBuilding)
@@ -62,7 +64,8 @@ public class BuildingsInformation : MonoBehaviour
             {
                 path.GetComponent<PathRise>().ChangePathVisibility(true);
             }
-            mr.enabled = true;
+            buildingVisuals.SetActive(true);
+            //mr.enabled = true;
             bc.enabled = true;
         }
         initialYPosition = transform.position.y;
@@ -100,7 +103,8 @@ public class BuildingsInformation : MonoBehaviour
 
     private IEnumerator MoveToInitialPosition()
     {
-        mr.enabled = true;
+        buildingVisuals.SetActive(true);
+        //mr.enabled = true;
         bc.enabled = true;
         while (Mathf.Abs(transform.position.y - initialYPosition) > 0.01f)
         {

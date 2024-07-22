@@ -23,26 +23,34 @@ public class MetersManager : MonoBehaviour
         LoadInitialValues();
     }
 
+    public void UpdateEvilMeter(float value)
+    {
+        earthEvilMeter += value;
+        earthEvilMeter = Mathf.Clamp(earthEvilMeter, 0f, 10f);
+        UpdateGodSatisfactionMeter();
+    }
+
     public void UpdateHappinessMeter()
     {
         happinessMeter = SoulsManager.Instance.ReturnAverageHappiness();
-        if (happinessMeter > 5.0f)
-        {
-            UpdateGodSatisfactionMeter(0.25f);
-        }
-        else
-        {
-            UpdateGodSatisfactionMeter(-0.25f);
-        }
+        happinessMeter = Mathf.Clamp(happinessMeter, 0f, 10f);
+        UpdateGodSatisfactionMeter();
     }
 
-    public void UpdateGodSatisfactionMeter(float satisfaction)
+    public void UpdateGodSatisfactionMeter()
     {
-        godSatisfactionMeter += satisfaction;
+        float normalizedHappiness = happinessMeter / 10f;
+        float normalizedEarthEvil = earthEvilMeter / 10f;
+
+        float normalizedGodSatisfaction = normalizedHappiness * (1 - normalizedEarthEvil);
+
+        godSatisfactionMeter = normalizedGodSatisfaction * 10f;
+
         godSatisfactionMeter = Mathf.Clamp(godSatisfactionMeter, 0f, 10f);
-        if(godSatisfactionMeter <= 3.0f)
+
+        if (godSatisfactionMeter < 1.0f)
         {
-            Debug.Log("Game Over");
+            //GameOverSequence.Instance.OnGameOverSequenceInitiated();
         }
     }
 

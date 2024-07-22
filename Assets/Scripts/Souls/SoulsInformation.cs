@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SoulsInformation : MonoBehaviour
 {
-    public float happinessLevel; 
+    public float happinessLevel = 7.5f; 
     public bool isEngaged = false;
 
     public void EngageSoul()
@@ -34,7 +34,7 @@ public class SoulsInformation : MonoBehaviour
 
         BuildingsInformation currentBuilding = BuildingsManager.Instance.buildingsList[GetComponent<SoulsMovement>().currentBuildingIndex];
 
-        float happinessLevelToAdjust = (currentBuilding.happinessPointsEarning) * (Random.Range(0f, 1f) < 0.75f ? 1 : -1);
+        float happinessLevelToAdjust = (currentBuilding.happinessPointsEarning);
         AdjustHappinessLevel(happinessLevelToAdjust);
         
         SoulsManager.Instance.UpdateSoulLists(this);

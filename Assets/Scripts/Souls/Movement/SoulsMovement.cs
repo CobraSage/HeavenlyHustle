@@ -91,7 +91,7 @@ public class SoulsMovement : MonoBehaviour
     {
         isFreeRoaming = true;
         int targetHouseIndex = currentBuildingIndex;
-        GetComponent<SoulsInformation>().AdjustHappinessLevel(-1);
+        GetComponent<SoulsInformation>().AdjustHappinessLevel(-0.05f);
 
         if(BuildingsManager.Instance.unlockedBuildingsList.Count > 1)
         {

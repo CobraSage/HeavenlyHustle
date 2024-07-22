@@ -43,4 +43,15 @@ public class PersistentDataManager : MonoBehaviour
         return File.Exists(savePath);
     }
 
+    public void DeleteAllSaveData()
+    {
+        string saveDirectory = Application.persistentDataPath;
+
+        string[] files = Directory.GetFiles(saveDirectory);
+
+        foreach (string file in files)
+        {
+            File.Delete(file);
+        }
+    }
 }

@@ -25,6 +25,7 @@ public class SideGameUI : MonoBehaviour
     [SerializeField] private GameObject sideGameObject;
     [SerializeField] private Image fadeImage; 
     [SerializeField] private float fadeDuration = 1f;
+    [SerializeField] private GameObject mainSceneButton;
 
     [field: Header("Game Over UI")]
     [SerializeField] GameObject gameOverUIObject;
@@ -183,12 +184,14 @@ public class SideGameUI : MonoBehaviour
             conclusionText.text = winningStrings[Random.Range(0,winningStrings.Count)];
             soulsEarned.text = "Souls Earned: " + soulsEarnedValue.ToString();
             CurrencyManager.Instance.AdjustSouls(soulsEarnedValue);
+            MetersManager.Instance.UpdateEvilMeter(-1);
         }
         else
         {
             resultText.text = "Innocent Soul Banished...";
             conclusionText.text = losingStrings[Random.Range(0, losingStrings.Count)];
             soulsEarned.text = "Souls Earned: 0";
+            MetersManager.Instance.UpdateEvilMeter(1);
         }
     }
 
@@ -217,6 +220,7 @@ public class SideGameUI : MonoBehaviour
             sideGameObject.SetActive(true);
             isSideGameActive = true;
             switchButton.gameObject.SetActive(false);
+            mainSceneButton.SetActive(false);
         }
         else
         {
@@ -231,6 +235,7 @@ public class SideGameUI : MonoBehaviour
             sideGameObject.SetActive(false);
             isSideGameActive = false;
             switchButton.gameObject.SetActive(true);
+            mainSceneButton.SetActive(true);
 
             StartCoroutine(CooldownTimer());
         }
@@ -290,7 +295,7 @@ public class SideGameUI : MonoBehaviour
 
         switchButton.interactable = true;
         isCooldownActive = false;
-        buttonText.text = "Switch";
+        buttonText.text = "Play";
     }
     #endregion
 }

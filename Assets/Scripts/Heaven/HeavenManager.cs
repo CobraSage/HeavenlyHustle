@@ -7,12 +7,19 @@ public class HeavenManager : MonoBehaviour
     public int heavenTotalCapacity = 10;
     public int heavenTotalCapacityLevel = 1;
     public int heavenCurrentCapacity = 0;
+    public int heavenTotalCapacityBasePrice = 1;
+
     public float sideGameCooldownTime = 5 * 60f;
-    public float sideGameCooldownReductionLevel = 1;
+    public int sideGameCooldownReductionLevel = 1;
+    public int sideGameCooldownReductionBasePrice = 1;
+
     public float soulsMultiplier = 1f;
     public int soulsMultiplierLevel = 1;
+    public int soulsMultiplierBasePrice = 1;
+
     public float happinessPointsMultiplier = 1f;
     public int happinessPointsMultiplierLevel = 1;
+    public int happinessPointsBaseMultiplierPrice = 1;
 
     private void Awake()
     {
@@ -38,7 +45,18 @@ public class HeavenManager : MonoBehaviour
         }
         heavenTotalCapacityLevel++;
         heavenTotalCapacity += 10;
-        // Saving&Loading
+        PurchasesDataManager.Instance.UpdateAndSaveHeavenTotalCapacityLevel(heavenTotalCapacityLevel);
+    }
+    public void UpgradeSideGameCooldownLevel()
+    {
+        if (heavenTotalCapacityLevel >= 5)
+        {
+            UtilityScript.LogError("SideGameCooldownLevel is at max level?!");
+            return;
+        }
+        sideGameCooldownReductionLevel++;
+        sideGameCooldownTime = (5f - (0.5f * (sideGameCooldownReductionLevel-1))) * 60f;
+        PurchasesDataManager.Instance.UpdateAndSaveSideGameCooldownReductionLevel(sideGameCooldownReductionLevel);
     }
 
     public void UpgradeSoulsMultiplierLevel()
@@ -50,7 +68,7 @@ public class HeavenManager : MonoBehaviour
         }
         soulsMultiplierLevel++;
         soulsMultiplier += 0.5f;
-        // Saving&Loading
+        PurchasesDataManager.Instance.UpdateAndSaveSoulsMultiplierLevel(soulsMultiplierLevel);
     }
 
     public void UpgradeHappinessPointsMultiplierLevel()
@@ -62,7 +80,7 @@ public class HeavenManager : MonoBehaviour
         }
         happinessPointsMultiplierLevel++;
         happinessPointsMultiplier += 0.5f;
-        // Saving&Loading
+        PurchasesDataManager.Instance.UpdateAndSaveHappinessPointsMultiplierLevel(happinessPointsMultiplierLevel);
     }
 
     private void LoadInitialValues()
