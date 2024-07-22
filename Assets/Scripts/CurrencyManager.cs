@@ -27,7 +27,7 @@ public class CurrencyManager : MonoBehaviour
     {
         if (soulsText != null)
         {
-            soulsText.text = soulsAmount.ToString();
+            soulsText.text = "Souls: " + soulsAmount.ToString();
         }
         else
         {
@@ -37,7 +37,7 @@ public class CurrencyManager : MonoBehaviour
 
         if(happinessPointsText != null)
         {
-        happinessPointsText.text = happinessPointsAmount.ToString();
+        happinessPointsText.text = "Happiness Points: " + happinessPointsAmount.ToString();
         }
         else
         {
@@ -74,7 +74,7 @@ public class CurrencyManager : MonoBehaviour
         ProfileData loadedData = ProfileDataManager.Instance.ReturnLoadedProfileData();
         soulsAmount = loadedData.soulsAmount;
         happinessPointsAmount = loadedData.happinessPointsAmount;
-        soulsText.text = soulsAmount.ToString();
-        happinessPointsText.text = happinessPointsAmount.ToString();
+        soulsText.text = "Souls: " + soulsAmount.ToString();
+        happinessPointsText.text = "Happiness Points: " + happinessPointsAmount.ToString();
     }
 }

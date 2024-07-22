@@ -8,6 +8,7 @@ public class PurchaseManager : MonoBehaviour
 {
     [field: Header("Building Purchase")]
     [SerializeField] private Button confirmPurchase;
+    [SerializeField] private TextMeshProUGUI confirmationText;
     [SerializeField] private Button cancelPurchase;
     [SerializeField] private List<Button> buildingPurchaseButtons = new List<Button>();
     [SerializeField] private GameObject confirmationUI;
@@ -70,6 +71,7 @@ public class PurchaseManager : MonoBehaviour
         }
         Time.timeScale = 0;
         confirmationUI.SetActive(true);
+        confirmationText.text = "Are you sure you want to buy the " + BuildingsManager.Instance.buildingsList[currentBuildingIndex].buildingName + " for " + BuildingsManager.Instance.buildingsList[currentBuildingIndex].buildingUnlockPrice + " Happiness Points?";
     }
 
     private void ConfirmBuildingPurchase()
